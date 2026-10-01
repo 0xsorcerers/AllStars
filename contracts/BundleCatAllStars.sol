@@ -733,21 +733,6 @@ contract BundleCatAllStars is ReentrancyGuard {
         Author = _reveal;
     }
 
-    /// @notice Withdraw native coin from the contract (DAO only).
-    function withdraw(uint256 _amount) external onlyGameDAO nonReentrant {
-        require(_amount <= address(this).balance, "Insufficient balance");
-        _safeTransferETH(gameDAO, _amount);
-    }
-
-    /// @notice Withdraw ERC20 tokens from the contract (DAO only).
-    function withdrawERC20(
-        address _token,
-        uint256 _amount
-    ) external onlyGameDAO nonReentrant {
-        IERC20 paytoken = IERC20(_token);
-        paytoken.safeTransfer(msg.sender, _amount);
-    }
-
     function pause() public onlyGameDAO {
         require(!paused, "Already paused.");
         paused = true;
