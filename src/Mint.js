@@ -451,6 +451,12 @@ const Mint = ({ setComponent }) => {
     }
   }, [account?.address, applyMintSnapshot, fetchMintDataLegacy]);
 
+  useEffect(() => {
+    if (!errorMessageVisible || errorMessage !== 'Failed to load mint data') return undefined;
+    const dismissTimer = setTimeout(() => setErrorMessageVisible(false), 5000);
+    return () => clearTimeout(dismissTimer);
+  }, [errorMessageVisible, errorMessage]);
+
   const fetchTokenBalance = useCallback(async (playerAddr) => {
     const addr = playerAddr || account?.address;
     if (!addr) return 0n;
@@ -511,25 +517,25 @@ const Mint = ({ setComponent }) => {
     dismissTimers.current = [];
   };
 
-  const scheduleDismiss = (fn, ms = 8000) => {
+  const scheduleDismiss = useCallback((fn, ms = 8000) => {
     const t = setTimeout(fn, ms);
     dismissTimers.current.push(t);
     return t;
-  };
+  }, []);
 
-  const showError = (msg) => {
+  const showError = useCallback((msg) => {
     setErrorMessage(msg);
     setErrorMessageVisible(true);
     setInfoMessageVisible(false);
     scheduleDismiss(() => setErrorMessageVisible(false), 10000);
-  };
+  }, [scheduleDismiss]);
 
-  const showInfo = (msg, tone = 'info') => {
+  const showInfo = useCallback((msg, tone = 'info') => {
     setInfoTone(tone);
     setInfoMessage(msg);
     setInfoMessageVisible(true);
     scheduleDismiss(() => setInfoMessageVisible(false), 7000);
-  };
+  }, [scheduleDismiss]);
 
   /**
    * Mark a minted token in the feed; if wallet owns it, show personal receipt toast.
@@ -567,7 +573,7 @@ const Mint = ({ setComponent }) => {
         showInfo(`CAT #${id} mint confirmed!`, 'success');
       }
     }
-  }, []);
+  }, [showInfo]);
 
   /**
    * Parse proofOfAllStarCat from a confirmed mint tx (primary receipt path).
@@ -684,7 +690,7 @@ const Mint = ({ setComponent }) => {
       showError(err?.shortMessage || err?.message || 'Failed to read mint receipt.');
       return null;
     }
-  }, [registerMintedToken]);
+  }, [registerMintedToken, showError, showInfo]);
 
   const handleMint = async () => {
     if (loading || mintingRef.current) return;

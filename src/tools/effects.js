@@ -1,5 +1,4 @@
-import soundtrack from "../assets/sounds/music/shadows_and_dust.mp3";
-import sneakyAdventure from "../assets/sounds/music/sneaky_adventure.mp3";
+import soundtrack from "../assets/sounds/music/ascend.mp3";
 import windhowl from "../assets/sounds/music/windhowl.mp3";
 import brick from "../assets/sounds/effects/bricksound.mp3";
 import concrete from "../assets/sounds/effects/concrete.mp3";
@@ -32,18 +31,19 @@ import greenHalftone from "../assets/images/green_halftone.webp";
 import redHalftone from "../assets/images/red_halftone.webp";
 
 /* storyboards */
-import Forest from '../assets/images/web/STORYBOARD/Forest.webp';
 import Mecha from '../assets/images/web/STORYBOARD/Mecha.webp';
 import City from '../assets/images/web/STORYBOARD/City.webp';
 import Frost from '../assets/images/web/STORYBOARD/Frost.webp';
 import Ruins from '../assets/images/web/STORYBOARD/Ruins.webp';
+import Streets from  '../assets/images/web/STORYBOARD/Streets.webp';
 
 /* storyboards Mobile */
-import ForestMobile from '../assets/images/mobile/STORYBOARD/Forest.webp'
 import MechaMobile from '../assets/images/mobile/STORYBOARD/Mecha.webp'
 import CityMobile from '../assets/images/mobile/STORYBOARD/City.webp'
 import FrostMobile from '../assets/images/mobile/STORYBOARD/Frost.webp'
-import RuinsMobile from '../assets/images/mobile/STORYBOARD/Ruins.webp'
+import RuinsMobile from '../assets/images/mobile/STORYBOARD/Ruins.webp';
+import StreetsMobile from '../assets/images/mobile/STORYBOARD/Streets.webp'
+
 
 /* heroes */
 import Androcles from '../assets/images/web/HERO/Androcles.webp';
@@ -261,7 +261,6 @@ const miscImages = {
 
 const backgroundMusic = {
   Soundtrack: soundtrack, 
-  SneakyAdventure: sneakyAdventure,
   Windhowl: windhowl,
 }
 
@@ -290,19 +289,19 @@ const soundEffects = {
 }
 
 const foregroundStoryboards = {
-  Forest,
   Mecha,
   City,
   Frost,
-  Ruins
+  Ruins,
+  Streets
 }
 
 const foregroundStoryboardsMobile = {
   Mecha: MechaMobile,
   City: CityMobile,
-  Forest: ForestMobile,
   Frost: FrostMobile,
-  Ruins: RuinsMobile
+  Ruins: RuinsMobile,
+  Streets: StreetsMobile,
 }
 
 const foregroundHeroes = {

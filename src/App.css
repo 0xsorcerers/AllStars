@@ -765,6 +765,10 @@ html, body, #root {
   align-items: center;
 }
 
+.mobile-nav-primary {
+  display: none;
+}
+
 @keyframes colorWave {
   0% {
     background-position: -90vw;
@@ -1129,9 +1133,12 @@ html, body, #root {
   }
 
   .mobile-nav {
-  
-  .mobile-nav {
     display: block;
+  }
+
+  .mobile-nav-primary {
+    display: inline-flex;
+    align-items: center;
   }
   
   .desktop-nav {
@@ -1145,5 +1152,4 @@ html, body, #root {
     margin: 0;
     text-align: center;
   }
- }
 }

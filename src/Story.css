@@ -295,11 +295,11 @@
     padding: 0;
     margin: 0;
   }
-  .literary-content-phonetic {
-    font-size: 0.75vh;
-  }
+  .literary-content-phonetic,
   .literary-content-text {
-    font-size: 1.5vh;
+    font-size: 0.68rem;
+    line-height: 1.3;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
   }
   .literary-content-hero {
     top: 10vh;

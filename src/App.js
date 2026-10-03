@@ -17,6 +17,8 @@ import { foregroundStoryboards, LegendaryHeroes, LegendaryChoices, foregroundSto
 import { Connector } from "./tools/utils";
 import { GrDocumentText } from "react-icons/gr";
 import { sdk } from '@farcaster/miniapp-sdk';
+import { useMediaQuery } from 'react-responsive';
+import { MdCancel } from 'react-icons/md';
 
 function App () {
   const [soundtrack, setSoundtrack] = useState(backgroundMusic.Soundtrack);
@@ -32,6 +34,7 @@ function App () {
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [howToOpen, setHowToOpen] = useState(false);
+  const isMobileViewport = useMediaQuery({ maxWidth: 768 });
   
   let account = useActiveAccount(); 
 
@@ -42,13 +45,19 @@ function App () {
 
   const verifyConnection = () => {
     if (!account) {
-      setErrorMessage("Connect Wallet To Play");
+      setErrorMessage(isMobileViewport ? "Connect Wallet from Menu" : "Connect Wallet To Play");
       setErrorMessageVisible(true);
       playWrong();
       return false
     }
     return true;
   }
+
+  useEffect(() => {
+    if (!errorMessageVisible) return undefined;
+    const dismissTimer = setTimeout(() => setErrorMessageVisible(false), 5000);
+    return () => clearTimeout(dismissTimer);
+  }, [errorMessageVisible, errorMessage]);
     
   //soundeffects
   
@@ -238,6 +247,24 @@ function App () {
           </div>
         </div>
 
+        {component !== 'legends' ? (
+          <button
+            type="button"
+            className={`nav-link mobile-nav-primary ${account ? '' : 'opacity2'}`}
+            onClick={handleStart}
+          >
+            PLAY
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="nav-link mobile-nav-primary"
+            onClick={() => setComponent('mint')}
+          >
+            All Stars
+          </button>
+        )}
+
         <div className="mobile-nav">
           <button
             type="button"
@@ -249,15 +276,6 @@ function App () {
           </button>
           {isDropdownOpen && (
             <div className="mobile-dropdown">
-              {component !== 'legends' ? (
-                <div className={`nav-link ${account ? '' : 'opacity2'}`} onClick={() => { handleStart(); setIsDropdownOpen(false); }}>
-                  PLAY
-                </div>
-              ) : (
-                <div className="nav-link" onClick={() => { setComponent('mint'); setIsDropdownOpen(false); }}>
-                  Spawn
-                </div>
-              )}
               <div className="app-header__wallet">
                 <Connector />
               </div>
@@ -282,6 +300,13 @@ function App () {
         </div>
       </div>
     </header>
+    {errorMessageVisible && (
+      <div className="notifications" role="status" aria-live="polite">
+        <div className="notifyText cancelled denied-shake">
+          <MdCancel aria-hidden /> {errorMessage}
+        </div>
+      </div>
+    )}
     {activeData.type === "audits" && (
       <Audits className="audits" images={activeData.images} visible={activeData.visible} />
     )}

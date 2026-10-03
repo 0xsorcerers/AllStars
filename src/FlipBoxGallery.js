@@ -3,6 +3,7 @@ import ReactPlayer from "react-player";
 import { soundEffects } from "./tools/effects";
 import { MdCancel, MdToggleOn } from 'react-icons/md';
 import { useActiveAccount } from "thirdweb/react";
+import { useMediaQuery } from 'react-responsive';
 
 /**
  * Landing + intro.
@@ -20,6 +21,7 @@ export default function FlipBoxGallery({ setComponent }) {
   const [soundEffectUrl, setSoundEffectUrl] = useState(null);
   const [isEffectPlaying, setIsEffectPlaying] = useState(false);
   const [visualEffect, setVisualEffect] = useState({playbox: false});
+  const isMobileViewport = useMediaQuery({ maxWidth: 768 });
 
   let account = useActiveAccount();
 
@@ -64,13 +66,19 @@ export default function FlipBoxGallery({ setComponent }) {
 
   const verifyConnection = () => {
     if (!account) {
-      setErrorMessage("Connect Wallet To Play");
+      setErrorMessage(isMobileViewport ? "Connect Wallet from Menu" : "Connect Wallet To Play");
       setErrorMessageVisible(true);
       playWrong();
       return false;
     }
     return true;
   };
+
+  useEffect(() => {
+    if (!errorMessageVisible) return undefined;
+    const dismissTimer = setTimeout(() => setErrorMessageVisible(false), 5000);
+    return () => clearTimeout(dismissTimer);
+  }, [errorMessageVisible, errorMessage]);
 
   const handlePlay = () => {
     if (!verifyConnection()) return;
@@ -166,7 +174,7 @@ export default function FlipBoxGallery({ setComponent }) {
         </button>
       )}
       {errorMessageVisible && (
-        <div className={`notify notifyText cancelled ${visualEffect.playbox ? 'denied-shake' : ''}`}>
+        <div className={`notify notifyText cancelled ${visualEffect.playbox ? 'denied-shake' : ''}`} role="status" aria-live="polite">
           <MdCancel /> {errorMessage}
           <MdToggleOn onClick={() => setErrorMessageVisible(false)} style={{cursor: 'pointer', margin: '0vh 1vh'}}/>
         </div>

@@ -322,7 +322,7 @@
     padding: 8px;
     max-width: 95vw;
   }
-  
+
   .flip-box {
     /* Optional: Adjust perspective for smaller screens */
     perspective: 800px;
@@ -336,5 +336,22 @@
   .nofullcover {
     background-size: cover;
     background-position: top;
+  }
+
+  /* Ensure intro video fits screen width on mobile */
+  .intro-video-wrap video,
+  .intro-video-wrap > div {
+    width: 100vw !important;
+    height: auto !important;
+    max-height: 100vh;
+    object-fit: contain !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+  }
+
+  .intro-video-wrap {
+    align-items: center;
+    justify-content: center;
   }
 }

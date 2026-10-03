@@ -166,7 +166,7 @@ const SPEECH_TINTS = [
  * Desktop: mid-torso only — clear of heroText / VS / name plates / match labels.
  */
 const randomSpeechChipStyle = (lane, mobile) => {
-  const tint = SPEECH_TINTS[randomShuffle(Math.max(SPEECH_TINTS.length - 1, 0))] || SPEECH_TINTS[0];
+  const tint = SPEECH_TINTS[randomShuffle(Math.max(SPEECH_TINTS.length, 0))] || SPEECH_TINTS[0];
   let top;
   let left;
   if (lane === "hero") {
@@ -414,6 +414,7 @@ const Legends = ({setComponent}) => {
   /** Lightbox: false = image face, true = attribute info face. */
   const [nftFlipInfo, setNftFlipInfo] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isMobileViewport = useMediaQuery({ maxWidth: 768 });
   const [feeType, setFeeType] = useState(null);
   // randomResult = firstDraw; playId = secondDraw. Win when they match.
   const [playId, setPlayId] = useState(null);
@@ -541,7 +542,7 @@ const Legends = ({setComponent}) => {
 
   const verifyConnection = () => {
     if (!account) {
-      setErrorMessage("Connect Wallet To Play");
+      setErrorMessage(isMobileViewport ? "Connect Wallet from Menu" : "Connect Wallet To Play");
       setErrorMessageVisible(true);
       playWrong();
       return false;
@@ -562,7 +563,7 @@ const Legends = ({setComponent}) => {
   
   const balanceVerificationCheck = () => {
     if (walletBalance == null || Number(walletBalance) <= 0) {
-      setErrorMessage(`You need ${blockchain.symbol} to pay the entry fee`);
+      setErrorMessage(`You need ${blockchain.symbol} to pay the gas entry fee`);
       setErrorMessageVisible(true);
       noPlayFunds();
       setLoading(false);
@@ -575,7 +576,7 @@ const Legends = ({setComponent}) => {
     const boardMap = isMobile ? foregroundStoryboardsMobile : foregroundStoryboards;
     const allSources = Object.values(boardMap || foregroundStoryboards);
     if (!allSources.length) return;
-    const imageIndex = randomShuffle(Math.max(allSources.length - 1, 0));
+    const imageIndex = randomShuffle(Math.max(allSources.length, 0));
     setBackground(allSources[imageIndex]);
     // NFT / game data loaded via bootstrapGame — only banter once ready
     if (dataReady) quickBanter();
@@ -745,10 +746,17 @@ const Legends = ({setComponent}) => {
     return partial || null;
   };
 
-  /** Always show a left-side hero portrait — never leave the stage blank. */
+  /** Set fallback hero image when no NFT is found. */
   const applyHeroFallback = (label = "Unidentified") => {
     setNames((n) => ({ ...n, hero: label }));
     setHeroImage(miscImages.noHeroFound || Object.values(LegendaryHeroes)[0] || null);
+    setNftMeta(null);
+  };
+
+  /** Clear hero image when loading/unknown - don't show anything until confirmed. */
+  const clearHeroImage = () => {
+    setHeroImage(null);
+    setNames((n) => ({ ...n, hero: null }));
     setNftMeta(null);
   };
 
@@ -778,7 +786,7 @@ const Legends = ({setComponent}) => {
         setNftMeta(null);
         // Owned NFT but metadata flaky — still show a legendary portrait so stage isn't empty
         const keys = Object.keys(LegendaryHeroes);
-        const k = keys[randomShuffle(Math.max(keys.length - 1, 0))] || keys[0];
+        const k = keys[randomShuffle(Math.max(keys.length, 0))] || keys[0];
         if (k && LegendaryHeroes[k]) {
           setHeroImage(LegendaryHeroes[k]);
           setNames((n) => ({ ...n, hero: k }));
@@ -1049,13 +1057,16 @@ const Legends = ({setComponent}) => {
   };
 
   const fetchNFT = async() => {
+    // Clear hero image while fetching to avoid showing stale/fallback image
+    clearHeroImage();
+
     if (!account?.address) {
       setNFT(0);
       applyHeroFallback("Unidentified");
       await fetchGameData(ethers.ZeroAddress, 0);
       return;
     }
-    try {      
+    try {
      const call1 = await contract.balanceOf(account.address);
      const token = Number(call1) || 0;
 
@@ -1074,7 +1085,7 @@ const Legends = ({setComponent}) => {
         const isBlacklisted = typeof call3 === 'object' && call3 !== null
           ? Boolean(call3.blacklist ?? call3[0])
           : Boolean(call3);
-        if (isBlacklisted) { 
+        if (isBlacklisted) {
           setNFT(0);
           applyHeroFallback("Unidentified");
           // one legend RPC: global + non-holder quote
@@ -1904,7 +1915,7 @@ const Legends = ({setComponent}) => {
 
     try {
       if (!account?.address) {
-        setErrorMessage("Connect Wallet To Play");
+        setErrorMessage(isMobileViewport ? "Connect Wallet from Menu" : "Connect Wallet To Play");
         setErrorMessageVisible(true);
         setLoading(false);
         pendingPlaySeed.current = null;
@@ -1942,7 +1953,7 @@ const Legends = ({setComponent}) => {
         setErrorMessage(
           plays > 1
             ? `Requires ${formatNumber(ethCostEth)} ${blockchain.symbol} for ${plays} plays`
-            : `Requires ${formatNumber(ethCostEth)} ${blockchain.symbol} entry fee`
+            : `Requires ${formatNumber(ethCostEth)} ${blockchain.symbol} gas entry fee`
         );
         setErrorMessageVisible(true);
         noPlayFunds();
@@ -2080,7 +2091,7 @@ const Legends = ({setComponent}) => {
       return "Game is paused. Try again later.";
     }
     if (/Insufficient fee/i.test(raw)) {
-      return `Not enough ${blockchain.symbol} sent for the entry fee.`;
+      return `Not enough ${blockchain.symbol} sent for the gas entry fee.`;
     }
     if (/Funds transfer failed/i.test(raw)) {
       return (
@@ -2097,7 +2108,7 @@ const Legends = ({setComponent}) => {
       return `Not enough $${blockchain.tokenSymbol} (or allowance) for the token fee. Approve again, then Play.`;
     }
     if (/insufficient funds|exceeds the balance/i.test(raw)) {
-      return `Not enough ${blockchain.symbol} in your wallet for gas + entry fee.`;
+      return `Not enough ${blockchain.symbol} in your wallet for gas entry fee.`;
     }
     if (/Timed out waiting for the next block/i.test(raw)) {
       return "Still waiting on the next block. Keep this dialog open and tap Reveal Play again.";
@@ -2126,8 +2137,8 @@ const Legends = ({setComponent}) => {
   // Bootstrap contract helper whenever wallet connects/disconnects.
   // Gate interactive fee/play UI on dataReady so null fields never hit the render path.
   useEffect(() => {
-    // Keep a placeholder portrait during reload so the left stage is never blank
-    applyHeroFallback(account ? "…" : "Unidentified");
+    // Clear hero image until we know if there's an NFT
+    clearHeroImage();
     setPlayOutcome(null);
     setHuntResults(null);
     setTokenBalance({ Wei: null, Mil: null, K: null, Data: null });
@@ -2137,7 +2148,6 @@ const Legends = ({setComponent}) => {
       setNFT(null);
       setPendingReveal(null);
       setRevealTickMs(null);
-      applyHeroFallback("Unidentified");
     }
     bootstrapGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -2249,7 +2259,7 @@ const Legends = ({setComponent}) => {
     const boardMap = isMobile ? foregroundStoryboardsMobile : foregroundStoryboards;
     const allSources = Object.values(boardMap || foregroundStoryboards);
     if (!allSources.length) return;
-    const imageIndex = randomShuffle(Math.max(allSources.length - 1, 0));
+    const imageIndex = randomShuffle(Math.max(allSources.length, 0));
     setBackground(allSources[imageIndex]);
   }, [playId, randomResult, isMobile]);
 
@@ -2388,13 +2398,13 @@ const Legends = ({setComponent}) => {
 
   useEffect(() => {
     if (visualEffect.playbox) {
-      setTimeout(() => setVisualEffect({playbox: false}), 3000);
+      setTimeout(() => setVisualEffect({playbox: false}), 10000);
     }
     if (visualEffect.funds) {
-      setTimeout(() => setVisualEffect({funds: false}), 3000);
+      setTimeout(() => setVisualEffect({funds: false}), 10000);
     }
     if (visualEffect.nft) {
-      setTimeout(() => setVisualEffect({nft: false}), 3000);
+      setTimeout(() => setVisualEffect({nft: false}), 10000);
     }
   }, [visualEffect.playbox, visualEffect.funds, visualEffect.nft]);
 
@@ -2488,27 +2498,29 @@ const Legends = ({setComponent}) => {
       )}
 
       {/* Original hero / choice / match placement (fixed coords from your design) */}
-      {/* Always paint a left portrait so first load is never blank */}
-      <>
-        <img
-          src={heroImage || miscImages.noHeroFound}
-          className={`characterImage index10 ${visualEffect.nft ? 'denied-shake' : ''} ${stageFocus === 'hero' ? 'stage-focus' : ''}`}
-          alt={names.hero || 'Hero'}
-          onClick={() => setStageFocus('hero')}
-          style={{ cursor: 'pointer', pointerEvents: 'auto' }}
-        />
-        <div className="vs"><img src={require("./assets/images/vs.gif")} alt="vs" className="vsImage" /></div>
-        <div className="heroText">
-          <span className="heroText__title">YOUR HERO</span>
-          <br />
-          {nft > 0
-            ? <span className="waveanimator quote ledger">from All Star Cat {nft}</span>
-            : <span className="waveanimator quote ledger">rouge Cat</span>}
-        </div>
-        {names.hero && names.hero !== "…" && (
-          <div className={`heroName waveanimator regal ${stageFocus === 'hero' ? 'stage-focus-label' : ''}`}>{names.hero}</div>
-        )}
-      </>
+      {/* Only render hero image when heroImage is loaded (not null) */}
+      {heroImage !== null && (
+        <>
+          <img
+            src={heroImage}
+            className={`characterImage index10 ${visualEffect.nft ? 'denied-shake' : ''} ${stageFocus === 'hero' ? 'stage-focus' : ''}`}
+            alt={names.hero || 'Hero'}
+            onClick={() => setStageFocus('hero')}
+            style={{ cursor: 'pointer', pointerEvents: 'auto' }}
+          />
+          <div className="vs"><img src={require("./assets/images/vs.gif")} alt="vs" className="vsImage" /></div>
+          <div className="heroText">
+            <span className="heroText__title">YOUR HERO</span>
+            <br />
+            {nft > 0
+              ? <span className="waveanimator quote ledger">from All Star Cat {nft}</span>
+              : <span className="waveanimator quote ledger">rouge Cat</span>}
+          </div>
+          {names.hero && names.hero !== "…" && (
+            <div className={`heroName waveanimator regal ${stageFocus === 'hero' ? 'stage-focus-label' : ''}`}>{names.hero}</div>
+          )}
+        </>
+      )}
       {choiceImage && <>
         <img
           src={choiceImage}
@@ -2838,7 +2850,7 @@ const Legends = ({setComponent}) => {
           </div>
 
           <a
-            href={`https://opensea.io/${blockchain.chainId}/${blockchain.address}`}
+            href={`https://opensea.io/collection/${blockchain.collection}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
@@ -2890,7 +2902,7 @@ const Legends = ({setComponent}) => {
         <div className={`literary-content-artifact tadhigh ${animations.literaryArtifact ? 'animate-in' : ''}`}>
           <img src={require('./assets/images/oil-lamp.gif')} className="candle" />
           <span className="waveanimator liberty literary-content-title">Low Risk - High Reward play</span>
-          <span className="literary-content-phonetic larger">Pay a small <span style={{color: 'gold'}}>{blockchain.symbol}</span> entry fee plus a <span style={{color: 'gold'}}>${blockchain.tokenSymbol}</span> token fee each play. {isMobile ? ''  :  <br />} Miss and your fee stays in the {potSymbol} pot for the <span style={{color: 'gold'}}>next attempt</span>.</span>
+          <span className="literary-content-phonetic larger">Pay a small <span style={{color: 'gold'}}>{blockchain.symbol}</span> gas entry fee plus a <span style={{color: 'gold'}}>${blockchain.tokenSymbol}</span> token fee each play. {isMobile ? ''  :  <br />} Miss and your fee stays in the {potSymbol} pot for the <span style={{color: 'gold'}}>next attempt</span>.</span>
           <span className="literary-content-text">If you own a Cat, you gain a significant discount on the platform fee on your winnings. Currently sitting at {feeType !== null ? feeType : 0}% discount {feeType == 0 && "\(because you own none)."}</span>
           <MdToggleOn onClick={() => setDisplayOff({ ...displayOff, artifact: 'none' })} style={{cursor: 'pointer'}}/>
         </div>

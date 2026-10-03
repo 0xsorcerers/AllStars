@@ -28,17 +28,16 @@ export const client = createThirdwebClient({
 export const wallets = [
   createWallet("com.coinbase.wallet"),
   walletConnect(),
-  // createWallet("io.metamask"),
   inAppWallet({
     auth: {
       // mode: "redirect",
       options: [
-        "farcaster",
         "google",
         "x",
-        "telegram",
         "facebook",
+        "telegram",
         "discord",
+        "farcaster",
         "apple",
         "phone",
         "email",
@@ -55,6 +54,7 @@ export const blockchain = {
   /** ERC20 token symbol (token fee / token pot). */
   tokenSymbol: 'BUN',
   address: '0xcfcc1ce8Ee743E44F9936d0Eb4ea143a0a46aA87', // AllStarCat NFT
+  collection: 'allstarcat',
   chainId: 4663, 
   rpc: 'https://rpc.mainnet.chain.robinhood.com',
   blockExplorer: 'https://robinhoodchain.blockscout.com/',
@@ -69,6 +69,7 @@ export const blockchain = {
   // symbol: 'ETH',
   // tokenSymbol: 'CNY',
   // address: '0x6f2A200D859a1E4DF8FfB28eBc6F45F4b0341132', // AllStarCatS NFT
+  // collecton: '',
   // chainId: 11155111, // Ethereum Sepolia
   // rpc: 'https://ethereum-sepolia-rpc.publicnode.com',
   // blockExplorer: 'https://sepolia.etherscan.io/',
@@ -180,6 +181,7 @@ export function Connector () {
       client={client}
       chain={base}
       wallets={wallets}
+      showAllWallets={false}
       theme={darkTheme({
         colors: {
           primaryText: "#7FFF00",
@@ -208,11 +210,11 @@ export function Connector () {
         connectButton={{ label: "Login" }}
         connectModal={{
           size: "wide",
-          title: "Socials or Wallet",
+          title: "Socials or Wallet?",
           titleIcon:
             "/logo512.webp",
           welcomeScreen: {
-            title: "All Stars!",
+            title: "All Stars! (Social login recommended 🔥)",
             subtitle:
               "...kickass gaming flywheel with BundleCat.",
             img: {

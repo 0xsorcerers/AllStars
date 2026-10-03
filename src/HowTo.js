@@ -36,7 +36,7 @@ const HOW_TO_SECTIONS = [
     id: 'hunt',
     header: 'All the best in your showdown!',
     description:
-      'Simply push the Play button to begin your draw. Two fully on-chain draws are requested — if they match, you have bested the Baller you selected and an autopayment is sent to you. If not, your playing fee goes to fatten the pot for the next game.',
+      'Simply push the Play button to begin your draw. Two fully on-chain draws are requested — if they match, you have bested the Baller you selected and an autopayment is sent to you. If not, your playing fee goes to fatten the pot for the next Cat.',
     comic: comicMakeCash,
     comicAlt:
       'Comic strip: a cigar-smoking BundleCat holds a framed photo of a crew of anthropomorphic cat players, with a saying beneath the frame saying Go Big or Go Home.',
