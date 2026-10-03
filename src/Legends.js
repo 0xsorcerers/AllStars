@@ -3031,8 +3031,8 @@ const Legends = ({setComponent}) => {
                 ) : (
                   <>
                     Play complete. Reveal (at $0 cost) to pull up
-                    results. If you leave without revealing your bounty before this window expires,
-                    any proceeds from your play are lost forever (forfeited to the prize pot).
+                    results. If you leave without revealing your bounty, you risk proceeds from
+                    from your play being forfeited to the prize pot. So do as soon as you're able.
                   </>
                 )}
               </p>
