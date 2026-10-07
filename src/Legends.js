@@ -377,7 +377,7 @@ const proofOfAllStarCatWinEvent = prepareEvent({
   signature: "event proofOfAllStarCat(uint256 indexed id, address indexed from, uint256 indexed amountWon, uint256 seeded)",
 });
 
-const Legends = ({setComponent}) => {
+const Legends = ({ setComponent, onRequestAllStarsFocus }) => {
   account = useActiveAccount();
   wallet = useActiveWallet();
   const [loading, setLoading] = useState(false);
@@ -621,8 +621,9 @@ const Legends = ({setComponent}) => {
   }
 
   const noPlayNFT = () => {
-    setVisualEffect({...visualEffect, nft: true});
-    playWrong();    
+    setVisualEffect({ ...visualEffect, nft: true });
+    onRequestAllStarsFocus?.();
+    playWrong();
   }
 
   /**
@@ -2850,7 +2851,8 @@ const Legends = ({setComponent}) => {
           </div>
 
           <a
-            href={`https://opensea.io/collection/${blockchain.collection}`}
+            // href={`https://opensea.io/collection/${blockchain.collection}`}
+            href={`https://opensea.io/item/${(blockchain.name).toLowerCase()}/${(blockchain.address).toLowerCase()}/${nft}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
@@ -3032,7 +3034,7 @@ const Legends = ({setComponent}) => {
                   <>
                     Play complete. Reveal (at $0 cost) to pull up
                     results. If you leave without revealing your bounty, you risk proceeds from
-                    from your play being forfeited to the prize pot. So do as soon as you're able.
+                    your play being forfeited to the prize pot. So do this as soon as you're able.
                   </>
                 )}
               </p>

@@ -26,7 +26,10 @@ export const client = createThirdwebClient({
 });
 
 export const wallets = [
+  createWallet("com.binance.wallet"),
   createWallet("com.coinbase.wallet"),
+  createWallet("com.okex.wallet"),
+  createWallet("com.trustwallet.app"),
   walletConnect(),
   inAppWallet({
     auth: {
@@ -181,7 +184,7 @@ export function Connector () {
       client={client}
       chain={base}
       wallets={wallets}
-      showAllWallets={false}
+      // showAllWallets={false}
       theme={darkTheme({
         colors: {
           primaryText: "#7FFF00",

@@ -34,9 +34,22 @@ function App () {
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [howToOpen, setHowToOpen] = useState(false);
+  const [allStarsPulse, setAllStarsPulse] = useState(false);
+  const allStarsPulseTimeoutRef = useRef(null);
   const isMobileViewport = useMediaQuery({ maxWidth: 768 });
   
   let account = useActiveAccount(); 
+
+  const triggerAllStarsPulse = () => {
+    if (allStarsPulseTimeoutRef.current) {
+      clearTimeout(allStarsPulseTimeoutRef.current);
+    }
+
+    setAllStarsPulse(true);
+    allStarsPulseTimeoutRef.current = setTimeout(() => {
+      setAllStarsPulse(false);
+    }, 7000);
+  };
 
   const handleStart = () => {
     if (!verifyConnection()) return;
@@ -58,6 +71,14 @@ function App () {
     const dismissTimer = setTimeout(() => setErrorMessageVisible(false), 5000);
     return () => clearTimeout(dismissTimer);
   }, [errorMessageVisible, errorMessage]);
+
+  useEffect(() => {
+    return () => {
+      if (allStarsPulseTimeoutRef.current) {
+        clearTimeout(allStarsPulseTimeoutRef.current);
+      }
+    };
+  }, []);
     
   //soundeffects
   
@@ -238,7 +259,13 @@ function App () {
               PLAY
             </div>
           ) : (
-            <div className="nav-link" onClick={() => setComponent('mint')}>
+            <div
+              className={`nav-link ${allStarsPulse ? 'all-stars-focus' : ''}`}
+              onClick={() => {
+                triggerAllStarsPulse();
+                setComponent('mint');
+              }}
+            >
               All Stars
             </div>
           )}
@@ -258,8 +285,11 @@ function App () {
         ) : (
           <button
             type="button"
-            className="nav-link mobile-nav-primary"
-            onClick={() => setComponent('mint')}
+            className={`nav-link mobile-nav-primary ${allStarsPulse ? 'all-stars-focus' : ''}`}
+            onClick={() => {
+              triggerAllStarsPulse();
+              setComponent('mint');
+            }}
           >
             All Stars
           </button>
@@ -317,7 +347,12 @@ function App () {
     {component === 'home' && <FlipBoxGallery setComponent={setComponent}/>}
     </div>
     {component === 'mint' && <Mint setComponent={setComponent} />}
-    {component === 'legends' && <Legends setComponent={setComponent} />}
+    {component === 'legends' && (
+      <Legends
+        setComponent={setComponent}
+        onRequestAllStarsFocus={triggerAllStarsPulse}
+      />
+    )}
     <HowTo open={howToOpen} onClose={() => setHowToOpen(false)} />
     </>
   );

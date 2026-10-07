@@ -1153,7 +1153,7 @@ const Mint = ({ setComponent }) => {
       ) : (
         <>
           <div className="mintTitle" align="center">
-            <span style={{ fontFamily: 'NexaHeavy', color: '#7ec8ff' }}>Cats</span>
+            <span style={{ fontFamily: 'NexaHeavy', color: '#7ec8ff' }}>All Star Cat</span>
             {countDown > 0 ? 'Mint not yet live' : 'Mint is live'}
             <div style={{ padding: '0.5rem' }}>
               <Connector />
@@ -1181,9 +1181,9 @@ const Mint = ({ setComponent }) => {
           </Mobile>
           <div className="tagline">
             only available <br />
-            on Base{' '}
+            on {`${blockchain.name}`}
           </div>
-          <img src={visualEffects.logobase} className="tagImage" alt="Base" />
+          <img src={visualEffects.logobase} className="tagImage" alt={`${blockchain.name}`} />
         </>
       )}
 
