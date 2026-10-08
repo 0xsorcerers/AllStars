@@ -8,7 +8,7 @@ import { ThirdwebProvider } from "thirdweb/react";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ThirdwebProvider clientId={"ec9ef4d224ba816493ad7601bfa0f0fe"}>
+    <ThirdwebProvider>
       <App />
     </ThirdwebProvider>
   </React.StrictMode>
