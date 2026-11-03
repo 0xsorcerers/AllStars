@@ -198,7 +198,7 @@ export function Connector () {
         supportedTokens={{
           [blockchain.chainId]: [{
             address: blockchain.bun_contract_address,
-            name: blockchain.name,
+            name: blockchain.tokenSymbol,
             symbol: blockchain.tokenSymbol,
             icon: '/bunlogo.jpg',
           },

@@ -469,6 +469,8 @@ const Legends = ({ setComponent, onRequestAllStarsFocus }) => {
   const [huntResults, setHuntResults] = useState(null);
   /** Which loss rows are expanded in the results dialog. */
   const [expandedRolls, setExpandedRolls] = useState({});
+  /** Ref to the results outcome-card for scroll-to-top control. */
+  const resultsCardRef = useRef(null);
   /** Live mm:ss tick for the reveal countdown (derived from blocksLeft × EST_BLOCK_MS). */
   const [revealTickMs, setRevealTickMs] = useState(null);
   /** Cached one-shot read from getGameData() — pot, fees, odds, last winner, etc. */
@@ -1191,7 +1193,12 @@ const Legends = ({ setComponent, onRequestAllStarsFocus }) => {
       nonce: nonce != null ? String(nonce) : null,
       bountyKey: lockedKey,
     });
-    setExpandedRolls({});
+    // Expand the last loss by default if there are no wins, so users can see one result
+    setExpandedRolls(
+      wins.length === 0 && losses.length > 0
+        ? { [losses[losses.length - 1].index]: true }
+        : {}
+    );
     setDidWin(won);
     setPlayOutcome(won ? "win" : "lose");
     if (amountWon != null) {
@@ -2172,6 +2179,13 @@ const Legends = ({ setComponent, onRequestAllStarsFocus }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account?.address, dataReady]);
 
+  // Scroll results card to top when huntResults changes (so entry #1 is visible)
+  useEffect(() => {
+    if (huntResults && resultsCardRef.current) {
+      resultsCardRef.current.scrollTop = 0;
+    }
+  }, [huntResults]);
+
   // Refresh blocks-left while reveal dialog is open; countdown uses EST_BLOCK_MS.
   useEffect(() => {
     if (!pendingReveal?.commitBlock || !account?.address) return undefined;
@@ -2648,7 +2662,7 @@ const Legends = ({ setComponent, onRequestAllStarsFocus }) => {
                     onClick={openSeasonBoard}
                     title="Season winners board"
                   >
-                    Details
+                    Winners
                   </button>
                 </div>
               )}
@@ -3111,6 +3125,7 @@ const Legends = ({ setComponent, onRequestAllStarsFocus }) => {
           aria-label="Play results"
         >
           <div
+            ref={resultsCardRef}
             className={`outcome-card ${huntResults.potWon ? "outcome-win" : "outcome-lose"} outcome-results`}
             onClick={(e) => e.stopPropagation()}
           >
@@ -3196,7 +3211,7 @@ const Legends = ({ setComponent, onRequestAllStarsFocus }) => {
               {huntResults.losses.length > 0 && (
                 <div className="results-losses">
                   <div className="results-losses-head">
-                    Missed bounties ({huntResults.losses.length})
+                    Missed plays ({huntResults.losses.length})
                   </div>
                   {huntResults.losses.map((row) => {
                     const bountyName =

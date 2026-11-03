@@ -1,4 +1,5 @@
 import soundtrack from "../assets/sounds/music/ascend.mp3";
+import soundtrack2 from "../assets/sounds/music/badly.mp3";
 import windhowl from "../assets/sounds/music/windhowl.mp3";
 import brick from "../assets/sounds/effects/bricksound.mp3";
 import concrete from "../assets/sounds/effects/concrete.mp3";
@@ -35,7 +36,7 @@ import Mecha from '../assets/images/web/STORYBOARD/Mecha.webp';
 import City from '../assets/images/web/STORYBOARD/City.webp';
 import Frost from '../assets/images/web/STORYBOARD/Frost.webp';
 import Ruins from '../assets/images/web/STORYBOARD/Ruins.webp';
-import Streets from  '../assets/images/web/STORYBOARD/Streets.webp';
+import Streets from '../assets/images/web/STORYBOARD/Streets.webp';
 
 /* storyboards Mobile */
 import MechaMobile from '../assets/images/mobile/STORYBOARD/Mecha.webp'
@@ -226,20 +227,20 @@ import mothvslamp from '../assets/images/partners/mothvslamp.webp';
 const documents = {
   Metadata: metadata,
 };
-let air1,air2,air3,air4,air5,air6;
+let air1, air2, air3, air4, air5, air6;
 /** Mint air-lane faces: distinct Dino breeds (not the old cake icons). */
 const visualEffects = {
   logo,
   logobase: baselogo,
-  air1: ReboundCat,   
-  air2: TornadoCat,    
-  air3: TaleCat,  
-  air4: TimeOutCat,    
-  air5: SquatCat,     
-  air6: BuzzCat,   
+  air1: ReboundCat,
+  air2: TornadoCat,
+  air3: TaleCat,
+  air4: TimeOutCat,
+  air5: SquatCat,
+  air6: BuzzCat,
 }
 
-const auditArray = [sos_audit,tos_audit,los_audit]
+const auditArray = [sos_audit, tos_audit, los_audit]
 
 const partnerArray = [
   perqfi,
@@ -260,7 +261,8 @@ const miscImages = {
 };
 
 const backgroundMusic = {
-  Soundtrack: soundtrack, 
+  Soundtrack: soundtrack,
+  Soundtrack2: soundtrack2,
   Windhowl: windhowl,
 }
 
@@ -355,7 +357,7 @@ const foregroundVillains = {
   Polyphemus,
   Harpies,
   Keres
-} 
+}
 
 const foregroundVillainsMobile = {
   Minotaur: MinotaurMobile,
@@ -515,15 +517,15 @@ const literaryHeroes = {
 
 const literaryPatrons = {
   Zeus: { name: 'Zeus', phonetic: '/zjuːs/', text: 'high-throned and bearer of the thunder, watches the battlefield with eyes like storm. When justice wavers, he strikes with lightning to restore the sacred balance among mortal kin.' },
-  Apollo: {name: 'Apollo', phonetic: '/əˈpɒləʊ/', text: 'lord of light and lyre, walks unseen where Spartans clash, lending fire to their aim and foresight to their minds. In moments of valor, his golden bow sings through the hands of chosen kin.' },
-  Artemis: {name: 'Artemis', phonetic: '/ˈɑːtəmɪs/', text: 'huntress of the moon and guardian of the wild, guides the arrows of Spartan maidens and stills the hearts of foes. She lendeth swift silence to those who stalk as shadows beneath night’s veil.' },
-  Athena: {name: 'Athena', phonetic: '/əˈθiːnə/', text: 'grey-eyed bearer of wisdom and warcraft, whispers counsel in the minds of tactful leaders. When the shield-wall holds and the spear finds its mark, know her hand hath touched the soul.' },
-  Demeter: {name: 'Demeter', phonetic: '/ˈdɛmətə/', text: 'mother of grain and green field, blesseth the soil ˈneath Spartan feet when they march for just cause. In times of siege and famine, she guardeth the harvest for those who honor her rites.' },
-  Dionysus: {name: 'Dionysus', phonetic: '/ˌdaɪəˈnaɪsəs/', text: 'reveler and breaker of bounds, doth stir frenzy in the hearts of Spartan berserkers. Where wine flows and fear falters, his mirth becomes madness that rends the ranks of foes.' },
-  Hades: {name: 'Hades', phonetic: '/ˈheɪdiːz/', text: 'lord of the shadowed realm, seeth all who fall ˈneath Spartan blades and welcomes them in solemn silence. Should one stray from fate’s appointed end, his hounds shall bring them low.' },
-  Hephaestus: {name: 'Hephaestus', phonetic: '/hɪˈfɛstəs/', text: 'hammer-lord and craftsman divine, doth bless the forge from whence Spartan arms are wrought. Each blade that cleaves with truth and might, rings with echoes of his sacred fire.' },
-  Hermes: {name: 'Hermes', phonetic: '/ˈhɜːmiːz/', text: 'Hermes, fleet-footed herald, walks unseen with Spartan scouts and spies, bearing whispers swifter than arrows. When fate hangs by a thread, his sandals carry mercy—or doom—on silent wind.' },
-  Poseidon: {name: 'Poseidon', phonetic: '/pəˈsaɪdən/', text: 'Poseidon, earth-shaker and sovereign of seas, stirreth both wave and wrath to shield Sparta’s shores. When storms rise ˈgainst invaders and tridents gleam in foam, it is he who roars his favor.' },
+  Apollo: { name: 'Apollo', phonetic: '/əˈpɒləʊ/', text: 'lord of light and lyre, walks unseen where Spartans clash, lending fire to their aim and foresight to their minds. In moments of valor, his golden bow sings through the hands of chosen kin.' },
+  Artemis: { name: 'Artemis', phonetic: '/ˈɑːtəmɪs/', text: 'huntress of the moon and guardian of the wild, guides the arrows of Spartan maidens and stills the hearts of foes. She lendeth swift silence to those who stalk as shadows beneath night’s veil.' },
+  Athena: { name: 'Athena', phonetic: '/əˈθiːnə/', text: 'grey-eyed bearer of wisdom and warcraft, whispers counsel in the minds of tactful leaders. When the shield-wall holds and the spear finds its mark, know her hand hath touched the soul.' },
+  Demeter: { name: 'Demeter', phonetic: '/ˈdɛmətə/', text: 'mother of grain and green field, blesseth the soil ˈneath Spartan feet when they march for just cause. In times of siege and famine, she guardeth the harvest for those who honor her rites.' },
+  Dionysus: { name: 'Dionysus', phonetic: '/ˌdaɪəˈnaɪsəs/', text: 'reveler and breaker of bounds, doth stir frenzy in the hearts of Spartan berserkers. Where wine flows and fear falters, his mirth becomes madness that rends the ranks of foes.' },
+  Hades: { name: 'Hades', phonetic: '/ˈheɪdiːz/', text: 'lord of the shadowed realm, seeth all who fall ˈneath Spartan blades and welcomes them in solemn silence. Should one stray from fate’s appointed end, his hounds shall bring them low.' },
+  Hephaestus: { name: 'Hephaestus', phonetic: '/hɪˈfɛstəs/', text: 'hammer-lord and craftsman divine, doth bless the forge from whence Spartan arms are wrought. Each blade that cleaves with truth and might, rings with echoes of his sacred fire.' },
+  Hermes: { name: 'Hermes', phonetic: '/ˈhɜːmiːz/', text: 'Hermes, fleet-footed herald, walks unseen with Spartan scouts and spies, bearing whispers swifter than arrows. When fate hangs by a thread, his sandals carry mercy—or doom—on silent wind.' },
+  Poseidon: { name: 'Poseidon', phonetic: '/pəˈsaɪdən/', text: 'Poseidon, earth-shaker and sovereign of seas, stirreth both wave and wrath to shield Sparta’s shores. When storms rise ˈgainst invaders and tridents gleam in foam, it is he who roars his favor.' },
 }
 
 const literaryVillains = {
@@ -688,8 +690,10 @@ const LegendaryMatches = {
   Wunderkind: MatchWunderkind,
 }
 
-export { backgroundMusic, soundEffects, visualEffects, documents, 
+export {
+  backgroundMusic, soundEffects, visualEffects, documents,
   foregroundStoryboards, foregroundHeroes, foregroundVillains, literaryData, miscImages,
-  foregroundPatrons, foregroundArtifacts, foregroundStoryboardsMobile, foregroundHeroesMobile, 
+  foregroundPatrons, foregroundArtifacts, foregroundStoryboardsMobile, foregroundHeroesMobile,
   foregroundVillainsMobile, foregroundPatronsMobile, foregroundArtifactsMobile,
-  LegendaryHeroes, LegendaryChoices, LegendaryMatches, auditArray, partnerArray };
+  LegendaryHeroes, LegendaryChoices, LegendaryMatches, auditArray, partnerArray
+};

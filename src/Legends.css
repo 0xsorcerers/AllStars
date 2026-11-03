@@ -2531,6 +2531,18 @@
     padding: 1rem 0.85rem 1.15rem;
   }
 
+  .outcome-card.outcome-results {
+    width: min(96vw, 560px);
+    max-width: calc(100vw - 1rem);
+    max-height: min(88dvh, calc(100dvh - 1rem));
+    padding: 1rem 0.85rem 1.15rem;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
   .outcome-actions {
     flex-direction: column;
     width: 100%;
@@ -2567,6 +2579,14 @@
     height: 67.5vh;
     max-height: min(67.5vh, calc(100dvh - var(--lg-chrome-h, 10rem) - 1rem));
     max-width: min(37.5vw, 100%);
+  }
+
+  /* Desktop: ensure outcome-results has proper scrolling */
+  .outcome-card.outcome-results {
+    max-height: min(80vh, 680px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Choice + match: slight nudge right (hero stays put) */

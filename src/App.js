@@ -7,38 +7,38 @@ import { soundEffects } from "./tools/effects";
 import { useActiveAccount } from "thirdweb/react";
 import ReactPlayer from 'react-player';
 import { FaTelegram, FaSquareXTwitter } from 'react-icons/fa6';
-import { images,  documents  } from "./tools/effects";
+import { images, documents } from "./tools/effects";
 import { BiSolidVolumeMute, BiSolidVolumeFull, BiChevronDown, BiChevronUp } from "react-icons/bi";
 import FlipBoxGallery from './FlipBoxGallery';
 import Mint from "./Mint";
 import Legends from "./Legends";
 import HowTo from "./HowTo";
-import { foregroundStoryboards, LegendaryHeroes, LegendaryChoices, foregroundStoryboardsMobile, backgroundMusic, visualEffects, auditArray, partnerArray} from "./tools/effects";
+import { foregroundStoryboards, LegendaryHeroes, LegendaryChoices, foregroundStoryboardsMobile, backgroundMusic, visualEffects, auditArray, partnerArray } from "./tools/effects";
 import { Connector } from "./tools/utils";
 import { GrDocumentText } from "react-icons/gr";
 import { sdk } from '@farcaster/miniapp-sdk';
 import { useMediaQuery } from 'react-responsive';
 import { MdCancel } from 'react-icons/md';
 
-function App () {
+function App() {
   const [soundtrack, setSoundtrack] = useState(backgroundMusic.Soundtrack);
   const [audioPlaying, setAudioPlaying] = useState(null);
   const [volumeLevel, setVolumeLevel] = useState(0.4);
   const [soundEffectUrl, setSoundEffectUrl] = useState(null);
-  const [isEffectPlaying, setIsEffectPlaying] = useState(false); 
+  const [isEffectPlaying, setIsEffectPlaying] = useState(false);
   const [request, setRequest] = useState(null);
   const [story, setStory] = useState(null);
   const [component, setComponent] = useState("home");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [visualEffect, setVisualEffect] = useState({playbox: false}); 
+  const [visualEffect, setVisualEffect] = useState({ playbox: false });
   const [errorMessage, setErrorMessage] = useState("");
   const [errorMessageVisible, setErrorMessageVisible] = useState(false);
   const [howToOpen, setHowToOpen] = useState(false);
   const [allStarsPulse, setAllStarsPulse] = useState(false);
   const allStarsPulseTimeoutRef = useRef(null);
   const isMobileViewport = useMediaQuery({ maxWidth: 768 });
-  
-  let account = useActiveAccount(); 
+
+  let account = useActiveAccount();
 
   const triggerAllStarsPulse = () => {
     if (allStarsPulseTimeoutRef.current) {
@@ -52,13 +52,13 @@ function App () {
   };
 
   const handleStart = () => {
-    if (!verifyConnection()) return;
+    // if (!verifyConnection()) return;
     setComponent('legends')
   }
 
   const verifyConnection = () => {
     if (!account) {
-      setErrorMessage(isMobileViewport ? "Connect Wallet from Menu" : "Connect Wallet To Play");
+      setErrorMessage(isMobileViewport ? "Sign In from Menu" : "Sign In to Play");
       setErrorMessageVisible(true);
       playWrong();
       return false
@@ -79,9 +79,9 @@ function App () {
       }
     };
   }, []);
-    
+
   //soundeffects
-  
+
   const handlePlay = () => {
     setAudioPlaying(!audioPlaying);
   };
@@ -93,7 +93,7 @@ function App () {
 
   const playWrong = () => {
     playSoundEffect(soundEffects.Wrong);
-    setVisualEffect({playbox: true});
+    setVisualEffect({ playbox: true });
   }
 
   const [activeData, setActiveData] = useState({ type: null, images: [] });
@@ -127,7 +127,7 @@ function App () {
     triggerWithTimeout("partners", partnerArray);
   };
 
-  
+
   useEffect(() => {
     // Preload when app first loads
     const preloadImages = () => {
@@ -139,7 +139,7 @@ function App () {
         ...Object.values(backgroundMusic),
         ...Object.values(visualEffects)
       ];
-      
+
       allImages.forEach(src => {
         if (src) {
           new Image().src = typeof src === 'string' ? src : (src.default || src);
@@ -149,7 +149,7 @@ function App () {
 
     // Delay slightly to avoid competing with critical assets
     const preloadTimer = setTimeout(preloadImages, 3000);
-    
+
     return () => clearTimeout(preloadTimer);
   }, []);
 
@@ -165,195 +165,196 @@ function App () {
         dropDownChecker();
       }, 40000);
     }
-  }, [isDropdownOpen]); 
-  
+  }, [isDropdownOpen]);
+
   useEffect(() => {
     if (component === 'legends') {
-      setSoundtrack(backgroundMusic.Soundtrack);
+      const selection = [backgroundMusic.Soundtrack, backgroundMusic.Soundtrack2];
+      setSoundtrack(selection[Math.floor(Math.random() * selection.length)]);
       setVolumeLevel(0.7);
     } else {
       setSoundtrack(backgroundMusic.Windhowl);
       setVolumeLevel(0.4);
     }
-  },[component]);
+  }, [component]);
 
 
   // base mini app 
-    useEffect(() => {
-        sdk.actions.ready();
-    }, []);
+  useEffect(() => {
+    sdk.actions.ready();
+  }, []);
 
   return (
     <>
-    <div align="center" onClick={() => {audioPlaying === null && setAudioPlaying(true)}}>
-    <ReactPlayer
-        url={soundtrack}
-        playing={audioPlaying}
-        volume={volumeLevel}
-        loop={true} 
-        style={{ display: 'none' }}
-        controls={false}
-      />     
+      <div align="center" onClick={() => { audioPlaying === null && setAudioPlaying(true) }}>
+        <ReactPlayer
+          url={soundtrack}
+          playing={audioPlaying}
+          volume={volumeLevel}
+          loop={true}
+          style={{ display: 'none' }}
+          controls={false}
+        />
 
-    <ReactPlayer
-      url={soundEffectUrl}
-      playing={isEffectPlaying}
-      volume={0.8}
-      onEnded={stopSoundEffect} 
-      style={{ display: 'none' }}
-      controls={false}
-    />
+        <ReactPlayer
+          url={soundEffectUrl}
+          playing={isEffectPlaying}
+          volume={0.8}
+          onEnded={stopSoundEffect}
+          style={{ display: 'none' }}
+          controls={false}
+        />
 
-    <header className={`app-header ${component === 'legends' ? 'app-header--arena' : ''}`}>
-      <div className="app-header__brand">
-        <img src={visualEffects.logo} alt="Dinos" className="logo" />
-        <nav className="app-header__socials" aria-label="Social links">
-          <button
-            type="button"
-            className="social-btn"
-            onClick={() => setHowToOpen(true)}
-            title="How To Play"
-          >
-            <GrDocumentText aria-hidden />
-            <span className="social-btn__label">How To</span>
-          </button>
-          <a
-            className="social-btn"
-            href="https://t.me/memearcade"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Telegram"
-          >
-            <FaTelegram aria-hidden />
-            <span className="social-btn__label">Telegram</span>
-          </a>
-          <a
-            className="social-btn"
-            href="https://x.com/mymemearcade"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="X"
-          >
-            <FaSquareXTwitter aria-hidden />
-            <span className="social-btn__label">X</span>
-          </a>
-        </nav>
-      </div>
-
-      <div className="app-header__actions">
-        <button
-          type="button"
-          className="icon-btn"
-          onClick={handlePlay}
-          title={audioPlaying ? 'Mute music' : 'Play music'}
-          aria-label={audioPlaying ? 'Mute music' : 'Play music'}
-        >
-          {audioPlaying
-            ? <BiSolidVolumeMute />
-            : <BiSolidVolumeFull />}
-        </button>
-
-        <div className="desktop-nav">
-          {component !== 'legends' ? (
-            <div className={`nav-link ${account ? '' : 'opacity2'}`} onClick={handleStart}>
-              PLAY
-            </div>
-          ) : (
-            <div
-              className={`nav-link ${allStarsPulse ? 'all-stars-focus' : ''}`}
-              onClick={() => {
-                triggerAllStarsPulse();
-                setComponent('mint');
-              }}
-            >
-              All Stars
-            </div>
-          )}
-          <div className="app-header__wallet">
-            <Connector />
+        <header className={`app-header ${component === 'legends' ? 'app-header--arena' : ''}`}>
+          <div className="app-header__brand">
+            <img src={visualEffects.logo} alt="Dinos" className="logo" />
+            <nav className="app-header__socials" aria-label="Social links">
+              <button
+                type="button"
+                className="social-btn"
+                onClick={() => setHowToOpen(true)}
+                title="How To Play"
+              >
+                <GrDocumentText aria-hidden />
+                <span className="social-btn__label">How To</span>
+              </button>
+              <a
+                className="social-btn"
+                href="https://t.me/memearcade"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Telegram"
+              >
+                <FaTelegram aria-hidden />
+                <span className="social-btn__label">Telegram</span>
+              </a>
+              <a
+                className="social-btn"
+                href="https://x.com/mymemearcade"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="X"
+              >
+                <FaSquareXTwitter aria-hidden />
+                <span className="social-btn__label">X</span>
+              </a>
+            </nav>
           </div>
-        </div>
 
-        {component !== 'legends' ? (
-          <button
-            type="button"
-            className={`nav-link mobile-nav-primary ${account ? '' : 'opacity2'}`}
-            onClick={handleStart}
-          >
-            PLAY
-          </button>
-        ) : (
-          <button
-            type="button"
-            className={`nav-link mobile-nav-primary ${allStarsPulse ? 'all-stars-focus' : ''}`}
-            onClick={() => {
-              triggerAllStarsPulse();
-              setComponent('mint');
-            }}
-          >
-            All Stars
-          </button>
-        )}
+          <div className="app-header__actions">
+            <button
+              type="button"
+              className="icon-btn"
+              onClick={handlePlay}
+              title={audioPlaying ? 'Mute music' : 'Play music'}
+              aria-label={audioPlaying ? 'Mute music' : 'Play music'}
+            >
+              {audioPlaying
+                ? <BiSolidVolumeMute />
+                : <BiSolidVolumeFull />}
+            </button>
 
-        <div className="mobile-nav">
-          <button
-            type="button"
-            className="mobile-nav-button"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            aria-expanded={isDropdownOpen}
-          >
-            Menu {isDropdownOpen ? <BiChevronUp /> : <BiChevronDown />}
-          </button>
-          {isDropdownOpen && (
-            <div className="mobile-dropdown">
+            <div className="desktop-nav">
+              {component !== 'legends' ? (
+                <div className={`nav-link ${account ? '' : 'opacity2'}`} onClick={handleStart}>
+                  PLAY
+                </div>
+              ) : (
+                <div
+                  className={`nav-link ${allStarsPulse ? 'all-stars-focus' : ''}`}
+                  onClick={() => {
+                    triggerAllStarsPulse();
+                    setComponent('mint');
+                  }}
+                >
+                  All Stars
+                </div>
+              )}
               <div className="app-header__wallet">
                 <Connector />
               </div>
-              <div className="mobile-socials">
-                <button
-                  type="button"
-                  className="social-btn"
-                  onClick={() => { setHowToOpen(true); setIsDropdownOpen(false); }}
-                  title="How To Play"
-                >
-                  <GrDocumentText /><span>How To</span>
-                </button>
-                <a className="social-btn" href="https://t.me/memearcade" target="_blank" rel="noopener noreferrer" title="Telegram">
-                  <FaTelegram /><span>Telegram</span>
-                </a>
-                <a className="social-btn" href="https://x.com/mymemearcade" target="_blank" rel="noopener noreferrer" title="X">
-                  <FaSquareXTwitter /><span>X</span>
-                </a>
-              </div>
             </div>
-          )}
-        </div>
+
+            {component !== 'legends' ? (
+              <button
+                type="button"
+                className={`nav-link mobile-nav-primary ${account ? '' : 'opacity2'}`}
+                onClick={handleStart}
+              >
+                PLAY
+              </button>
+            ) : (
+              <button
+                type="button"
+                className={`nav-link mobile-nav-primary ${allStarsPulse ? 'all-stars-focus' : ''}`}
+                onClick={() => {
+                  triggerAllStarsPulse();
+                  setComponent('mint');
+                }}
+              >
+                All Stars
+              </button>
+            )}
+
+            <div className="mobile-nav">
+              <button
+                type="button"
+                className="mobile-nav-button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                aria-expanded={isDropdownOpen}
+              >
+                Menu {isDropdownOpen ? <BiChevronUp /> : <BiChevronDown />}
+              </button>
+              {isDropdownOpen && (
+                <div className="mobile-dropdown">
+                  <div className="app-header__wallet">
+                    <Connector />
+                  </div>
+                  <div className="mobile-socials">
+                    <button
+                      type="button"
+                      className="social-btn"
+                      onClick={() => { setHowToOpen(true); setIsDropdownOpen(false); }}
+                      title="How To Play"
+                    >
+                      <GrDocumentText /><span>How To</span>
+                    </button>
+                    <a className="social-btn" href="https://t.me/memearcade" target="_blank" rel="noopener noreferrer" title="Telegram">
+                      <FaTelegram /><span>Telegram</span>
+                    </a>
+                    <a className="social-btn" href="https://x.com/mymemearcade" target="_blank" rel="noopener noreferrer" title="X">
+                      <FaSquareXTwitter /><span>X</span>
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </header>
+        {errorMessageVisible && (
+          <div className="notifications" role="status" aria-live="polite">
+            <div className="notifyText cancelled denied-shake">
+              <MdCancel aria-hidden /> {errorMessage}
+            </div>
+          </div>
+        )}
+        {activeData.type === "audits" && (
+          <Audits className="audits" images={activeData.images} visible={activeData.visible} />
+        )}
+        {activeData.type === "partners" && (
+          <Partners className="audits" images={activeData.images} visible={activeData.visible} />
+        )}
+
+        {component === 'home' && <FlipBoxGallery setComponent={setComponent} />}
       </div>
-    </header>
-    {errorMessageVisible && (
-      <div className="notifications" role="status" aria-live="polite">
-        <div className="notifyText cancelled denied-shake">
-          <MdCancel aria-hidden /> {errorMessage}
-        </div>
-      </div>
-    )}
-    {activeData.type === "audits" && (
-      <Audits className="audits" images={activeData.images} visible={activeData.visible} />
-    )}
-    {activeData.type === "partners" && (
-      <Partners className="audits" images={activeData.images} visible={activeData.visible} />
-    )}
-    
-    {component === 'home' && <FlipBoxGallery setComponent={setComponent}/>}
-    </div>
-    {component === 'mint' && <Mint setComponent={setComponent} />}
-    {component === 'legends' && (
-      <Legends
-        setComponent={setComponent}
-        onRequestAllStarsFocus={triggerAllStarsPulse}
-      />
-    )}
-    <HowTo open={howToOpen} onClose={() => setHowToOpen(false)} />
+      {component === 'mint' && <Mint setComponent={setComponent} />}
+      {component === 'legends' && (
+        <Legends
+          setComponent={setComponent}
+          onRequestAllStarsFocus={triggerAllStarsPulse}
+        />
+      )}
+      <HowTo open={howToOpen} onClose={() => setHowToOpen(false)} />
     </>
   );
 };

@@ -81,7 +81,7 @@ export default function FlipBoxGallery({ setComponent }) {
   }, [errorMessageVisible, errorMessage]);
 
   const handlePlay = () => {
-    if (!verifyConnection()) return;
+    // if (!verifyConnection()) return;
     setPlayIntro(true);
   };
 
@@ -150,9 +150,9 @@ export default function FlipBoxGallery({ setComponent }) {
             style={{ backgroundImage: "url(/images/parted.webp)" }}
           />
           <div className="intro-vignette" />
-          <div className="intro-caption">
+          {/* <div className="intro-caption">
             {introPhase < 2 ? "Cash Cats 'n' Money Mice" : "Part ways… hunt begins"}
-          </div>
+          </div> */}
           <button type="button" className="intro-skip" onClick={goToLegends}>
             Skip
           </button>
